@@ -25,7 +25,7 @@ public class GitApiClientServiceTest {
     private static final String GIT_USER_REPOS_ENDPOINT = "https://api.github.com/users/{username}/repos";
 
     @Autowired
-    private GitApiClientService gitApiClientService;
+    private GitRestClientService gitApiClientService;
 
     @MockBean
     private RestTemplate restTemplate;

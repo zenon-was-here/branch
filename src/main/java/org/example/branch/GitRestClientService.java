@@ -1,6 +1,6 @@
 package org.example.branch;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -8,17 +8,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class GitApiClientService {
+public class GitRestClientService implements GitClientServiceI {
 
     private final RestTemplate restTemplate;
 
-    public GitApiClientService(RestTemplate restTemplate) {
+    public GitRestClientService(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
     }
 
     private static final String GIT_USER_ENDPOINT = "https://api.github.com/users/{username}";
     private static final String GIT_USER_REPOS_ENDPOINT = "https://api.github.com/users/{username}/repos";
 
+    @Cacheable("user")
     public GithubUser getUser(String username) {
         var user = restTemplate.getForObject(GIT_USER_ENDPOINT, GithubUser.class, username);
         var repos = getUserRepos(username);

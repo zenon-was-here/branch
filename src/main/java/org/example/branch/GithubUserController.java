@@ -13,16 +13,14 @@ import static org.springframework.http.HttpStatus.*;
 @RestController
 public class GithubUserController {
 
-    final GitApiClientService gitApiService;
+    final GitRestClientService gitApiService;
 
-    public GithubUserController(GitApiClientService gitApiService) {
+    public GithubUserController(GitRestClientService gitApiService) {
         this.gitApiService = gitApiService;
     }
 
     @GetMapping("/githubuser/{username}")
     public ResponseEntity<GithubUser> githubUser(@PathVariable String username) {
-        gitApiService.getUserRepos(username);
-
         var resp = gitApiService.getUser(username);
 
         if (resp == null) {
