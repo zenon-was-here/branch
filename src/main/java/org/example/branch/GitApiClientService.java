@@ -16,6 +16,8 @@ public class GitApiClientService {
     public GithubUser getUser(String username) {
         var user = restTemplate.getForObject(GIT_USER_ENDPOINT, GithubUser.class, username);
 
+       var repos = getUserRepos(username);
+
         if (user != null) {
             return new GithubUser(
                     user.login(),
@@ -24,7 +26,8 @@ public class GitApiClientService {
                     user.geoLocation(),
                     user.email(),
                     user.url(),
-                    user.createdAt()
+                    user.createdAt(),
+                    repos
             );
         } else {
             return null;
