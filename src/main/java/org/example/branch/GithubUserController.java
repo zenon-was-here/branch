@@ -1,5 +1,6 @@
 package org.example.branch;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
@@ -7,16 +8,22 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class GithubUserController {
 
-    final GitApiService gitApiService;
+    final GitApiClientService gitApiService;
 
-    public GithubUserController(GitApiService gitApiService) {
+    public GithubUserController(GitApiClientService gitApiService) {
         this.gitApiService = gitApiService;
     }
 
     @GetMapping("/githubuser/{username}")
-    public GithubUser githubUser(@PathVariable String username) {
+    public ResponseEntity<GithubUser> githubUser(@PathVariable String username) {
         gitApiService.getUserRepos(username);
 
-        return gitApiService.getUser(username);
+        var resp = gitApiService.getUser(username);
+
+        if (resp == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(resp);
     }
 }
