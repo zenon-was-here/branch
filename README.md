@@ -27,20 +27,18 @@ the following structure:
 
 This application leverages core features of Spring Boot, and it is split into standard layers: Controller, Service, and DTOs.
 
-The Controller layer exists for users of this application to query.
-
-The Service layer exists to act as a client to the actual GitHub API and to join the data.
-
-The DTOs exist to allow us to convert the data from the JSON received by the GitHub API into our own structures. 
+- The Controller layer exists for users of this application to query.
+- The Service layer exists to act as a client to the actual GitHub API and to join the data.
+- The DTOs exist to allow us to convert the data from the JSON received by the GitHub API into our own structures. 
 
 The app also leverages recent Java features, such as Records. While these are appropriate for the simple immutable objects 
 like the Repos data, a more complex application that transforms data would likely need full-blown classes. 
 
 ### 3rd party libraries 
 
-The application also leverages Jackson, which is standard practice for JSON manipulation.
+1) Jackson: standard practice for JSON manipulation.
 
-It also leverages Lombok, which is used for eliminating boilerplate (construction, toString, getters, setters, etc). 
+2) Lombok: for minimizing boilerplate (construction, toString, getters, setters, etc). 
 
 ### Overkill features
 
@@ -82,7 +80,11 @@ git clone https://github.com/zenon-was-here/branch.git
 ### Build & Run
 
 `./gradlew clean build`
+&& 
 `./gradlew bootRun`
+
+Run tests: `./gradlew test`
+
 
 ## Try it out 
 
