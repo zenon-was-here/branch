@@ -3,7 +3,9 @@ package org.example.branch.service;
 import org.example.branch.dto.GithubUserDto;
 import org.example.branch.dto.GithubUserReposDto;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
@@ -25,32 +27,50 @@ public class GitRestClientService implements GitClientServiceI {
 
     @Cacheable("user")
     public GithubUserDto getUser(String username) {
-        var user = restTemplate.getForObject(GIT_USER_ENDPOINT, GithubUserDto.class, username);
-        var repos = getUserRepos(username);
+        try {
+            var user = restTemplate.getForObject(GIT_USER_ENDPOINT, GithubUserDto.class, username);
+            var repos = getUserRepos(username);
 
-        if (user != null) {
-            return new GithubUserDto(
-                    user.login(),
-                    user.displayName(),
-                    user.avatar(),
-                    user.geoLocation(),
-                    user.email(),
-                    user.url(),
-                    user.createdAt(),
-                    repos
-            );
-        } else {
-            return null;
+            System.out.println(user);
+            System.out.println(user.getLogin());
+            if (user != null) {
+                return new GithubUserDto(
+                        user.getLogin(),
+                        user.getDisplayName(),
+                        user.getAvatar(),
+                        user.getGeoLocation(),
+                        user.getEmail(),
+                        user.getUrl(),
+                        user.getCreatedAt(),
+                        repos
+                );
+            } else {
+                return null;
+            }
+        } catch (HttpClientErrorException e) {
+            if (e.getStatusCode() == HttpStatus.NOT_FOUND) {
+                return null;
+            } else {
+                throw e;
+            }
         }
     }
 
     public List<GithubUserReposDto> getUserRepos(String username) {
-        var userRepos = restTemplate.getForObject(GIT_USER_REPOS_ENDPOINT, GithubUserReposDto[].class, username);
+        try {
+            var userRepos = restTemplate.getForObject(GIT_USER_REPOS_ENDPOINT, GithubUserReposDto[].class, username);
 
-        if (userRepos == null) {
-            return new ArrayList<>();
-        } else {
-            return List.of(userRepos);
+            if (userRepos == null) {
+                return new ArrayList<>();
+            } else {
+                return List.of(userRepos);
+            }
+        } catch (HttpClientErrorException e) {
+            if (e.getStatusCode() == HttpStatus.NOT_FOUND) {
+                return new ArrayList<>();
+            } else {
+                throw e;
+            }
         }
     }
 }

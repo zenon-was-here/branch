@@ -1,8 +1,7 @@
-package org.example.branch;
+package org.example.branch.service;
 
 import org.example.branch.dto.GithubUserDto;
 import org.example.branch.dto.GithubUserReposDto;
-import org.example.branch.service.GitRestClientService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -63,8 +62,8 @@ public class GitApiClientServiceTest {
         GithubUserDto user = gitApiClientService.getUser(username);
 
         assertNotNull(user);
-        assertEquals(username, user.login());
-        assertEquals(expectedSize, user.GithubUserRepos().size());
+        assertEquals(username, user.getLogin());
+        assertEquals(expectedSize, user.getGithubUserRepos().size());
     }
 
     @Test

@@ -1,4 +1,4 @@
-package org.example.branch;
+package org.example.branch.controller;
 
 import org.example.branch.dto.GithubUserDto;
 import org.example.branch.dto.GithubUserReposDto;
@@ -57,7 +57,7 @@ public class GithubUserControllerTest {
         mockMvc.perform(get("/githubuser/{username}", username)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.login").value("octocat"))
+                .andExpect(jsonPath("$.user_name").value(username))
                 .andExpect(jsonPath("$.repos[0].name").value("repo0"))
                 .andExpect(jsonPath("$.repos[1].name").value("repo1"));
     }
@@ -118,6 +118,6 @@ public class GithubUserControllerTest {
         mockMvc.perform(get("/githubuser/{username}", username)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isServiceUnavailable())
-                .andExpect(content().string("Server error: Service unavailable"));
+                .andExpect(content().string("Server error: 503 Service unavailable"));
     }
 }
