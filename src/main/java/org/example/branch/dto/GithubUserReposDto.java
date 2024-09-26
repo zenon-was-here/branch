@@ -1,8 +1,8 @@
-package org.example.branch;
+package org.example.branch.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public record GithubUserRepos(
+public record GithubUserReposDto(
         @JsonProperty("name") String name,
         @JsonProperty("url") String htmlUrl
 ) {}

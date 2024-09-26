@@ -1,5 +1,8 @@
 package org.example.branch;
 
+import org.example.branch.dto.GithubUserDto;
+import org.example.branch.dto.GithubUserReposDto;
+import org.example.branch.service.GitRestClientService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -33,11 +36,11 @@ public class GitApiClientServiceTest {
     @BeforeEach
     public void setUp() {
         String username = "fakeoctocatusername123";
-        GithubUserRepos[] mockRepos = new GithubUserRepos[] {
-                new GithubUserRepos("repo0", "url0"),
-                new GithubUserRepos("repo1", "url1")
+        GithubUserReposDto[] mockRepos = new GithubUserReposDto[] {
+                new GithubUserReposDto("repo0", "url0"),
+                new GithubUserReposDto("repo1", "url1")
         };
-        GithubUser mockUser = new GithubUser("fakeoctocatusername123",
+        GithubUserDto mockUser = new GithubUserDto("fakeoctocatusername123",
                 "The Octocat",
                 "avatar_url",
                 "San Francisco",
@@ -46,9 +49,9 @@ public class GitApiClientServiceTest {
                 "created_at",
                 List.of(mockRepos));
 
-        when(restTemplate.getForObject(eq(GIT_USER_ENDPOINT), eq(GithubUser.class), eq(username)))
+        when(restTemplate.getForObject(eq(GIT_USER_ENDPOINT), eq(GithubUserDto.class), eq(username)))
                 .thenReturn(mockUser);
-        when(restTemplate.getForObject(eq(GIT_USER_REPOS_ENDPOINT), eq(GithubUserRepos[].class), eq(username)))
+        when(restTemplate.getForObject(eq(GIT_USER_REPOS_ENDPOINT), eq(GithubUserReposDto[].class), eq(username)))
                 .thenReturn(mockRepos);
     }
 
@@ -57,7 +60,7 @@ public class GitApiClientServiceTest {
         String username = "fakeoctocatusername123";
         int expectedSize = 2;
 
-        GithubUser user = gitApiClientService.getUser(username);
+        GithubUserDto user = gitApiClientService.getUser(username);
 
         assertNotNull(user);
         assertEquals(username, user.login());
@@ -69,7 +72,7 @@ public class GitApiClientServiceTest {
         String username = "fakeoctocatusername123";
         int expectedSize = 2;
 
-        List<GithubUserRepos> repos = gitApiClientService.getUserRepos(username);
+        List<GithubUserReposDto> repos = gitApiClientService.getUserRepos(username);
 
         assertNotNull(repos);
         assertEquals(expectedSize, repos.size());
@@ -79,10 +82,10 @@ public class GitApiClientServiceTest {
     public void testGetUserNotFound() {
         String username = "unknown";
 
-        when(restTemplate.getForObject(eq(GIT_USER_ENDPOINT), eq(GithubUser.class), eq(username)))
+        when(restTemplate.getForObject(eq(GIT_USER_ENDPOINT), eq(GithubUserDto.class), eq(username)))
                 .thenThrow(new HttpClientErrorException(HttpStatus.NOT_FOUND, "Not Found"));
 
-        GithubUser user = gitApiClientService.getUser(username);
+        GithubUserDto user = gitApiClientService.getUser(username);
 
         assertNull(user);
     }
@@ -91,10 +94,10 @@ public class GitApiClientServiceTest {
     public void testGetUserReposNotFound() {
         String username = "unknown";
 
-        when(restTemplate.getForObject(eq(GIT_USER_REPOS_ENDPOINT), eq(GithubUserRepos[].class), eq(username)))
+        when(restTemplate.getForObject(eq(GIT_USER_REPOS_ENDPOINT), eq(GithubUserReposDto[].class), eq(username)))
                 .thenThrow(new HttpClientErrorException(HttpStatus.NOT_FOUND, "Not Found"));
 
-        List<GithubUserRepos> repos = gitApiClientService.getUserRepos(username);
+        List<GithubUserReposDto> repos = gitApiClientService.getUserRepos(username);
 
         assertNotNull(repos);
         assertTrue(repos.isEmpty());
@@ -104,7 +107,7 @@ public class GitApiClientServiceTest {
     public void testGetUserInternalServerError() {
         String username = "fakeoctocatusername123";
 
-        when(restTemplate.getForObject(eq(GIT_USER_ENDPOINT), eq(GithubUser.class), eq(username)))
+        when(restTemplate.getForObject(eq(GIT_USER_ENDPOINT), eq(GithubUserDto.class), eq(username)))
                 .thenThrow(new HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "Internal Server Error"));
 
         assertThrows(RuntimeException.class, () -> gitApiClientService.getUser(username));

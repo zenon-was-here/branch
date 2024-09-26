@@ -1,11 +1,15 @@
-package org.example.branch;
+package org.example.branch.service;
 
+import org.example.branch.dto.GithubUserDto;
+import org.example.branch.dto.GithubUserReposDto;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
+
+// An implementation of GitClientServiceI to make REST client requests to the Github API endpoints for User and Repo info
 
 @Service
 public class GitRestClientService implements GitClientServiceI {
@@ -20,12 +24,12 @@ public class GitRestClientService implements GitClientServiceI {
     private static final String GIT_USER_REPOS_ENDPOINT = "https://api.github.com/users/{username}/repos";
 
     @Cacheable("user")
-    public GithubUser getUser(String username) {
-        var user = restTemplate.getForObject(GIT_USER_ENDPOINT, GithubUser.class, username);
+    public GithubUserDto getUser(String username) {
+        var user = restTemplate.getForObject(GIT_USER_ENDPOINT, GithubUserDto.class, username);
         var repos = getUserRepos(username);
 
         if (user != null) {
-            return new GithubUser(
+            return new GithubUserDto(
                     user.login(),
                     user.displayName(),
                     user.avatar(),
@@ -40,8 +44,8 @@ public class GitRestClientService implements GitClientServiceI {
         }
     }
 
-    public List<GithubUserRepos> getUserRepos(String username) {
-        var userRepos = restTemplate.getForObject(GIT_USER_REPOS_ENDPOINT, GithubUserRepos[].class, username);
+    public List<GithubUserReposDto> getUserRepos(String username) {
+        var userRepos = restTemplate.getForObject(GIT_USER_REPOS_ENDPOINT, GithubUserReposDto[].class, username);
 
         if (userRepos == null) {
             return new ArrayList<>();

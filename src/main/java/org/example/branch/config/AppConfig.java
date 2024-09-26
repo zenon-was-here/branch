@@ -1,4 +1,4 @@
-package org.example.branch;
+package org.example.branch.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

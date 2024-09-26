@@ -1,5 +1,8 @@
 package org.example.branch;
 
+import org.example.branch.dto.GithubUserDto;
+import org.example.branch.dto.GithubUserReposDto;
+import org.example.branch.service.GitRestClientService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,11 +34,11 @@ public class GithubUserControllerTest {
     @BeforeEach
     public void setUp() {
         String username = "fakeoctocatusername123";
-        GithubUserRepos[] mockRepos = new GithubUserRepos[] {
-                new GithubUserRepos("repo0", "url0"),
-                new GithubUserRepos("repo1", "url1")
+        GithubUserReposDto[] mockRepos = new GithubUserReposDto[] {
+                new GithubUserReposDto("repo0", "url0"),
+                new GithubUserReposDto("repo1", "url1")
         };
-        GithubUser mockUser = new GithubUser("fakeoctocatusername123",
+        GithubUserDto mockUser = new GithubUserDto("fakeoctocatusername123",
                 "The Octocat",
                 "avatar_url",
                 "San Francisco",
