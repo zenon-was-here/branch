@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
+// This leverages @JsonProperty for fields that we want to rename
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
