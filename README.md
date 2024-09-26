@@ -74,7 +74,7 @@ in-memory cache. This could be improved by leveraging Redis.
 
 ### Clone the Repository
 ```
-git clone 
+git clone git@github.com:zenon-was-here/branch.git
 ```
 
 ### Build & Run
